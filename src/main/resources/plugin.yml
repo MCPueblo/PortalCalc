@@ -5,3 +5,7 @@ api-version: 1.13
 authors: [JuanDelPueblo]
 description: MCPueblo PortalCalc
 website: mcpueblo.net
+commands:
+  portalcalc:
+    description: Calculates nether portal location
+    usage: /<command>
