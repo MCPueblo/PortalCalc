@@ -6,12 +6,12 @@ public final class PortalCalc extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        /* Plugin startup logic */
         this.getCommand("portalcalc").setExecutor(new PortalCalcCommand());
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        /* Plugin shutdown logic */
     }
 }

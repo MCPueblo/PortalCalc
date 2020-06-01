@@ -6,12 +6,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class PortalCalcCommand implements CommandExecutor {
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            sender.sendMessage("shit works");
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        String cmdName = cmd.getName().toLowerCase();
+
+        if (!cmdName.equals("portalcalc")) {
+            return false;
         }
-        return false;
+        sender.sendMessage("shit works");
+
+        return true;
     }
 }
