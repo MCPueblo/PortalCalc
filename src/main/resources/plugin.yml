@@ -1,0 +1,7 @@
+name: PortalCalc
+version: ${project.version}
+main: net.mcpueblo.portalcalc.PortalCalc
+api-version: 1.13
+authors: [JuanDelPueblo]
+description: MCPueblo PortalCalc
+website: mcpueblo.net
