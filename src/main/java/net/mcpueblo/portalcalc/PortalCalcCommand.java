@@ -1,5 +1,6 @@
 package net.mcpueblo.portalcalc;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,10 +18,14 @@ public class PortalCalcCommand implements CommandExecutor {
         int y = loc.getBlockY();
         int z = loc.getBlockZ();
 
+        int netherx = x / 8;
+        int netherz = z / 8;
+
         if (!cmdName.equals("portalcalc")) {
             return false;
         }
-        sender.sendMessage("You are at X: " + x + " Y: " + y + " Z: " + z);
+        sender.sendMessage(ChatColor.GOLD + "Recommended portal location for " + "X: " + x + " Y: " + y + " Z: " + z);
+        sender.sendMessage(ChatColor.GOLD + "X: " + netherx + " Y: " + y + " Z: " + netherz);
 
         return true;
     }
