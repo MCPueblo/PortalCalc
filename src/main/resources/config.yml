@@ -1,0 +1,8 @@
+# MCPueblo PortalCalc Messages
+# Use <dimension> as placeholder for the dimension the portal location is to be calculated.
+# You can utilize color codes with the & prefix.
+calc-message: "&6Calculating &5<dimension> &6portal location for the coordinates:"
+result-message: "&6Place the portal in the &5<dimension>&6 on the coordinates:"
+wrong-dimension-error: "&cYou cannot create nether portals in this world!"
+# Set to 0-9 or a-f to set the color for the coordinates. Leaving it as blank will set it to white.
+coord-color: "6"
