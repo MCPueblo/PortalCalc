@@ -1,4 +1,10 @@
-# MCPueblo PortalCalc Messages
+# MCPueblo PortalCalc Configuration
+
+# calculate = divide if the coordinate is in the overworld, multiply if in the nether.
+# Default is 8 as vanilla portals have a ratio of 1:8, but could be changed by other plugins/mods.
+# Must be a single digit, otherwise it will round to the nearest integer.
+calculate-coord-by: 8
+
 # Use <dimension> as placeholder for the dimension the portal location is to be calculated.
 # You can utilize color codes with the & prefix.
 calc-message: "&6Calculating &5<dimension> &6portal location for the coordinates:"
@@ -6,5 +12,6 @@ result-message: "&6Place the portal in the &5<dimension>&6 on the coordinates:"
 wrong-dimension-error: "&cYou cannot create nether portals in this world!"
 no-permission-error: "&cYou do not have permission to run this command!"
 run-from-console-error: "&cYou cannot run this command in the console!"
+
 # Set to 0-9 or a-f to set the color for the coordinates. Leaving it as blank will set it to white.
 coord-color: "6"

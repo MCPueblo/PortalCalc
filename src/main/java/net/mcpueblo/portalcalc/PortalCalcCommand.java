@@ -33,6 +33,7 @@ public class PortalCalcCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
+        int calcBy = (int) Math.round(plugin.getConfig().getDouble("calculate-coord-by"));
         String calcMessage = plugin.getConfig().getString("calc-message");
         String resultMessage = plugin.getConfig().getString("result-message");
         String wrongDimensionError = plugin.getConfig().getString("wrong-dimension-error");
@@ -49,8 +50,8 @@ public class PortalCalcCommand implements CommandExecutor {
 
             if (player.hasPermission("portalcalc.calc")) {
                 if (player.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
-                    int portalx = x / 8;
-                    int portalz = z / 8;
+                    int portalx = x / calcBy;
+                    int portalz = z / calcBy;
                     String netherCalcMessage = calcMessage.replace("<dimension>", "nether");
                     String netherResultMessage = resultMessage.replace("<dimension>", "nether");
                     String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
@@ -63,8 +64,8 @@ public class PortalCalcCommand implements CommandExecutor {
 
                     return true;
                 } else if (player.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
-                    int portalx = x * 8;
-                    int portalz = z * 8;
+                    int portalx = x * calcBy;
+                    int portalz = z * calcBy;
                     String overworldCalcMessage = calcMessage.replace("<dimension>", "overworld");
                     String overworldResultMessage = resultMessage.replace("<dimension>", "overworld");
                     String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
