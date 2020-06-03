@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.mcpueblo</groupId>
-    <artifactId>portalcalc</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>PortalCalc</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>PortalCalc</name>
@@ -16,7 +16,7 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>mcpueblo.net</url>
+    <url>https://mcpueblo.net</url>
 
     <build>
         <plugins>
