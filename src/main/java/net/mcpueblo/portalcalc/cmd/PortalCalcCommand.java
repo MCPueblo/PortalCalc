@@ -1,5 +1,8 @@
 package net.mcpueblo.portalcalc.cmd;
 
+import com.google.common.primitives.Doubles;
+import net.mcpueblo.portalcalc.PortalCalc;
+import net.mcpueblo.portalcalc.utils.ColorUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -7,8 +10,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import net.mcpueblo.portalcalc.PortalCalc;
 
 public class PortalCalcCommand implements CommandExecutor {
 
@@ -17,31 +20,20 @@ public class PortalCalcCommand implements CommandExecutor {
         plugin = instance;
     }
 
-    private ChatColor getCoordColor() {
-        String colorName = plugin.getConfig().getString("coord-color", null);
-
-        if (colorName == null) {
-            return ChatColor.WHITE;
-        }
-        if (colorName.isEmpty()) {
-            return ChatColor.WHITE;
-        }
-
-        return ChatColor.getByChar(colorName);
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        int calcBy = (int) Math.round(plugin.getConfig().getDouble("calculate-coord-by"));
-        String calcMessage = plugin.getConfig().getString("calc-message");
-        String resultMessage = plugin.getConfig().getString("result-message");
-        String wrongDimensionError = plugin.getConfig().getString("wrong-dimension-error");
-        String noPermissionError = plugin.getConfig().getString("no-permission-error");
-        String runFromConsoleError = plugin.getConfig().getString("run-from-console-error");
-        String coordColor = plugin.getConfig().getString("coord-color");
+        ConfigurationSection config = plugin.getConfig();
+        int calcBy = (int) Math.round(config.getDouble("calculate-coord-by"));
+        String calcMessage = config.getString("calc-message");
+        String resultMessage = config.getString("result-message");
+        String wrongDimensionError = config.getString("wrong-dimension-error");
+        String noPermissionError = config.getString("no-permission-error");
+        String runFromConsoleError = config.getString("run-from-console-error");
+        String wrongArgError = config.getString("wrong-arg-error");
 
         if (cmd.getName().equalsIgnoreCase("portalcalc") && args.length == 0 && sender instanceof Player) {
+
             Player player = (Player) sender;
             Location loc = player.getLocation();
             int x = loc.getBlockX();
@@ -50,6 +42,7 @@ public class PortalCalcCommand implements CommandExecutor {
 
             if (player.hasPermission("portalcalc.calc")) {
                 if (player.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
+
                     int portalx = x / calcBy;
                     int portalz = z / calcBy;
                     String netherCalcMessage = calcMessage.replace("<dimension>", "nether");
@@ -58,12 +51,13 @@ public class PortalCalcCommand implements CommandExecutor {
                     String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
 
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherCalcMessage));
-                    sender.sendMessage(getCoordColor() + calcCoords);
+                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherResultMessage));
-                    sender.sendMessage(getCoordColor() + resultCoords);
+                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
 
                     return true;
                 } else if (player.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
+
                     int portalx = x * calcBy;
                     int portalz = z * calcBy;
                     String overworldCalcMessage = calcMessage.replace("<dimension>", "overworld");
@@ -71,10 +65,10 @@ public class PortalCalcCommand implements CommandExecutor {
                     String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
                     String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
 
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', coordColor + overworldCalcMessage));
-                    sender.sendMessage(getCoordColor() + calcCoords);
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', coordColor + overworldResultMessage));
-                    sender.sendMessage(getCoordColor() + resultCoords);
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', overworldCalcMessage));
+                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', overworldResultMessage));
+                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
 
                     return true;
                 } else {
@@ -88,7 +82,76 @@ public class PortalCalcCommand implements CommandExecutor {
         } else if (cmd.getName().equalsIgnoreCase("portalcalc") && args.length == 0 && sender instanceof ConsoleCommandSender) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&',runFromConsoleError));
             return true;
-        } else if (cmd.getName().equalsIgnoreCase("portalcalc") && args[0].equalsIgnoreCase("reload") && sender.hasPermission("portalcalc.reload")) {
+        } else if (cmd.getName().equalsIgnoreCase("portalcalc")
+                && args.length == 4
+                && args[0].equalsIgnoreCase("nether")
+                && sender.hasPermission("portalcalc.calc")) {
+
+            final Double inputX = Doubles.tryParse(args[1]);
+            final Double inputY = Doubles.tryParse(args[2]);
+            final Double inputZ = Doubles.tryParse(args[3]);
+
+            if (inputX == null || inputY == null || inputZ == null) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',wrongArgError));
+                return true;
+            }
+
+            final int x = (int) Math.floor(inputX);
+            final int y = (int) Math.floor(inputY);
+            final int z = (int) Math.floor(inputZ);
+            final int portalx = x / calcBy;
+            final int portalz = z / calcBy;
+            String netherCalcMessage = calcMessage.replace("<dimension>", "overworld");
+            String netherResultMessage = resultMessage.replace("<dimension>", "overworld");
+            String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
+            String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
+
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherCalcMessage));
+            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherResultMessage));
+            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
+
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("portalcalc")
+                && args.length == 4
+                && (args[0].equalsIgnoreCase("overworld") || args[0].equalsIgnoreCase("world"))
+                && sender.hasPermission("portalcalc.calc")) {
+
+            final Double inputX = Doubles.tryParse(args[1]);
+            final Double inputY = Doubles.tryParse(args[2]);
+            final Double inputZ = Doubles.tryParse(args[3]);
+
+            if (inputX == null || inputY == null || inputZ == null) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',wrongArgError));
+                return true;
+            }
+
+            final int x = (int) Math.floor(inputX);
+            final int y = (int) Math.floor(inputY);
+            final int z = (int) Math.floor(inputZ);
+            final int portalx = x * calcBy;
+            final int portalz = z * calcBy;
+            String netherCalcMessage = calcMessage.replace("<dimension>", "overworld");
+            String netherResultMessage = resultMessage.replace("<dimension>", "overworld");
+            String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
+            String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
+
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherCalcMessage));
+            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherResultMessage));
+            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
+
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("portalcalc")
+                && args.length < 4
+                && (args[0].equalsIgnoreCase("overworld") || args[0].equalsIgnoreCase("world"))
+                && sender.hasPermission("portalcalc.calc")) {
+
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',wrongArgError));
+        } else if (cmd.getName().equalsIgnoreCase("portalcalc")
+                && args[0].equalsIgnoreCase("reload")
+                && sender.hasPermission("portalcalc.reload")) {
+
             plugin.reloadConfig();
             sender.sendMessage(ChatColor.GOLD + "Configuration and messages have been reloaded.");
             return true;
