@@ -12,6 +12,7 @@ result-message: "&6Place the portal in the &5<dimension>&6 on the coordinates:"
 wrong-dimension-error: "&cYou cannot create nether portals in this world!"
 no-permission-error: "&cYou do not have permission to run this command!"
 run-from-console-error: "&cYou cannot run this command in the console!"
+wrong-arg-error: "&c/portalcalc <dimension> <x> <y> <z>\nValues for <dimension>: overworld/world, nether"
 
 # Set to 0-9 or a-f to set the color for the coordinates. Leaving it as blank will set it to white.
 coord-color: "6"
