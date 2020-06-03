@@ -29,8 +29,8 @@ public class PortalCalcCommand implements CommandExecutor {
         String resultMessage = config.getString("result-message");
         String wrongDimensionError = config.getString("wrong-dimension-error");
         String noPermissionError = config.getString("no-permission-error");
-        String runFromConsoleError = config.getString("run-from-console-error");
-        String wrongArgError = config.getString("wrong-arg-error");
+        String runFromConsoleError = "You must run this command with coordinates in the console!";
+        String wrongArgError = "/portalcalc [dimension] [x] [y] [z]\nValues for [dimension]: overworld/world, nether";
 
         if (cmd.getName().equalsIgnoreCase("portalcalc") && args.length == 0 && sender instanceof Player) {
 
@@ -80,7 +80,7 @@ public class PortalCalcCommand implements CommandExecutor {
                 return true;
             }
         } else if (cmd.getName().equalsIgnoreCase("portalcalc") && args.length == 0 && sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',runFromConsoleError));
+            sender.sendMessage(ChatColor.RED + runFromConsoleError);
             return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && args.length == 4
@@ -92,7 +92,7 @@ public class PortalCalcCommand implements CommandExecutor {
             final Double inputZ = Doubles.tryParse(args[3]);
 
             if (inputX == null || inputY == null || inputZ == null) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',wrongArgError));
+                sender.sendMessage(ChatColor.RED + wrongArgError);
                 return true;
             }
 
@@ -122,7 +122,7 @@ public class PortalCalcCommand implements CommandExecutor {
             final Double inputZ = Doubles.tryParse(args[3]);
 
             if (inputX == null || inputY == null || inputZ == null) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',wrongArgError));
+                sender.sendMessage(ChatColor.RED + wrongArgError);
                 return true;
             }
 
@@ -147,7 +147,7 @@ public class PortalCalcCommand implements CommandExecutor {
                 && (args[0].equalsIgnoreCase("overworld") || args[0].equalsIgnoreCase("world"))
                 && sender.hasPermission("portalcalc.calc")) {
 
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',wrongArgError));
+            sender.sendMessage(ChatColor.RED + wrongArgError);
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && args[0].equalsIgnoreCase("reload")
                 && sender.hasPermission("portalcalc.reload")) {
