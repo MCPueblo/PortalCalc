@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class PortalCalcCommand implements CommandExecutor {
 
-    PortalCalc plugin;
+    private final PortalCalc plugin;
 
     public PortalCalcCommand(PortalCalc instance) {
         plugin = instance;
@@ -23,7 +23,7 @@ public class PortalCalcCommand implements CommandExecutor {
             return ChatColor.WHITE;
         }
         if (colorName.isEmpty()) {
-            return null;
+            return ChatColor.WHITE;
         }
 
         return ChatColor.getByChar(colorName);
