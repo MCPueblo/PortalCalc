@@ -4,8 +4,20 @@ main: net.mcpueblo.portalcalc.PortalCalc
 api-version: 1.13
 authors: [JuanDelPueblo]
 description: MCPueblo PortalCalc
-website: mcpueblo.net
+website: https://mcpueblo.net
 commands:
   portalcalc:
     description: Calculates nether portal location
+    usage: /<command> [dimension] [x] [y] [z]
+    aliases: pcalc
+  portalcalcreload:
+    description: Reload the plugin configuration
     usage: /<command>
+    aliases: [pcalcreload, pcalcrld]
+permissions:
+  portalcalc.calc:
+    description: Allow calculating portals with /portalcalc
+    default: true
+  portalcalc.reload:
+    description: Allow reloading the plugin configuration
+    default: op
