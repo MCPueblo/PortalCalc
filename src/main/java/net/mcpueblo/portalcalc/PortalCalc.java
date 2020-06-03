@@ -10,7 +10,6 @@ public final class PortalCalc extends JavaPlugin {
         this.saveDefaultConfig();
         getCommand("portalcalc").setExecutor(new PortalCalcCommand(this));
     }
-
     @Override
     public void onDisable() {
     }
