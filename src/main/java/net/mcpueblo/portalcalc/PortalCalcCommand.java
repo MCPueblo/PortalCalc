@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class PortalCalcCommand implements CommandExecutor {
@@ -77,6 +78,9 @@ public class PortalCalcCommand implements CommandExecutor {
 
                 return true;
             }
+        } else if (cmd.getName().equalsIgnoreCase("portalcalc") && sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(ChatColor.RED + "You cannot run this command in the console!");
+            return true;
         }
         return false;
     }
