@@ -144,10 +144,15 @@ public class PortalCalcCommand implements CommandExecutor {
             return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && args.length < 4
-                && (args[0].equalsIgnoreCase("overworld") || args[0].equalsIgnoreCase("world"))
                 && sender.hasPermission("portalcalc.calc")) {
 
             sender.sendMessage(ChatColor.RED + wrongArgError);
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("portalcalc")
+                && !(sender.hasPermission("portalcalc.calc"))) {
+
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermissionError));
+            return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && args[0].equalsIgnoreCase("reload")
                 && sender.hasPermission("portalcalc.reload")) {
@@ -156,6 +161,7 @@ public class PortalCalcCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.GOLD + "Configuration and messages have been reloaded.");
             return true;
         }
-        return false;
+        sender.sendMessage(ChatColor.RED + wrongArgError);
+        return true;
     }
 }
