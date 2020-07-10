@@ -1,8 +1,8 @@
 package net.mcpueblo.portalcalc.cmd;
 
 import com.google.common.primitives.Doubles;
+import de.themoep.minedown.MineDown;
 import net.mcpueblo.portalcalc.PortalCalc;
-import net.mcpueblo.portalcalc.utils.ColorUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 public class PortalCalcCommand implements CommandExecutor {
 
     private final PortalCalc plugin;
+
     public PortalCalcCommand(PortalCalc instance) {
         plugin = instance;
     }
@@ -29,8 +30,9 @@ public class PortalCalcCommand implements CommandExecutor {
         String resultMessage = config.getString("result-message");
         String wrongDimensionError = config.getString("wrong-dimension-error");
         String noPermissionError = config.getString("no-permission-error");
-        String runFromConsoleError = "You must run this command with coordinates in the console!";
-        String wrongArgError = "/portalcalc [dimension] [x] [y] [z]\nValues for [dimension]: overworld/world, nether";
+        String runFromConsoleError = ChatColor.RED + "You must run this command with coordinates in the console!";
+        String wrongArgError = ChatColor.RED + "/portalcalc [dimension] [x] [y] [z]\nValues for [dimension]: overworld/world, nether";
+        String coordDisplay = config.getString("coord-display");
 
         if (cmd.getName().equalsIgnoreCase("portalcalc") && args.length == 0 && sender instanceof Player) {
 
@@ -47,13 +49,17 @@ public class PortalCalcCommand implements CommandExecutor {
                     int portalz = z / calcBy;
                     String netherCalcMessage = calcMessage.replace("<dimension>", "nether");
                     String netherResultMessage = resultMessage.replace("<dimension>", "nether");
-                    String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
-                    String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
+                    String calcCoords = coordDisplay.replace("<x>", String.valueOf(x))
+                            .replace("<y>", String.valueOf(y))
+                            .replace("<z>", String.valueOf(z));
+                    String resultCoords = coordDisplay.replace("<x>", String.valueOf(portalx))
+                            .replace("<y>", String.valueOf(y))
+                            .replace("<z>", String.valueOf(portalz));
 
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherCalcMessage));
-                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherResultMessage));
-                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
+                    sender.spigot().sendMessage(new MineDown(netherCalcMessage).toComponent());
+                    sender.spigot().sendMessage(new MineDown(calcCoords).toComponent());
+                    sender.spigot().sendMessage(new MineDown(netherResultMessage).toComponent());
+                    sender.spigot().sendMessage(new MineDown(resultCoords).toComponent());
 
                     return true;
                 } else if (player.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
@@ -62,25 +68,29 @@ public class PortalCalcCommand implements CommandExecutor {
                     int portalz = z * calcBy;
                     String overworldCalcMessage = calcMessage.replace("<dimension>", "overworld");
                     String overworldResultMessage = resultMessage.replace("<dimension>", "overworld");
-                    String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
-                    String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
+                    String calcCoords = coordDisplay.replace("<x>", String.valueOf(x))
+                            .replace("<y>", String.valueOf(y))
+                            .replace("<z>", String.valueOf(z));
+                    String resultCoords = coordDisplay.replace("<x>", String.valueOf(portalx))
+                            .replace("<y>", String.valueOf(y))
+                            .replace("<z>", String.valueOf(portalz));
 
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', overworldCalcMessage));
-                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', overworldResultMessage));
-                    sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
+                    sender.spigot().sendMessage(new MineDown(overworldCalcMessage).toComponent());
+                    sender.spigot().sendMessage(new MineDown(calcCoords).toComponent());
+                    sender.spigot().sendMessage(new MineDown(overworldResultMessage).toComponent());
+                    sender.spigot().sendMessage(new MineDown(resultCoords).toComponent());
 
                     return true;
                 } else {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', wrongDimensionError));
+                    sender.spigot().sendMessage(new MineDown(wrongDimensionError).toComponent());
                     return true;
                 }
             } else {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermissionError));
+                sender.spigot().sendMessage(new MineDown(noPermissionError).toComponent());
                 return true;
             }
         } else if (cmd.getName().equalsIgnoreCase("portalcalc") && args.length == 0 && sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.RED + runFromConsoleError);
+            sender.sendMessage(runFromConsoleError);
             return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && args.length == 4
@@ -92,7 +102,7 @@ public class PortalCalcCommand implements CommandExecutor {
             final Double inputZ = Doubles.tryParse(args[3]);
 
             if (inputX == null || inputY == null || inputZ == null) {
-                sender.sendMessage(ChatColor.RED + wrongArgError);
+                sender.sendMessage(wrongArgError);
                 return true;
             }
 
@@ -103,13 +113,17 @@ public class PortalCalcCommand implements CommandExecutor {
             final int portalz = z / calcBy;
             String netherCalcMessage = calcMessage.replace("<dimension>", "overworld");
             String netherResultMessage = resultMessage.replace("<dimension>", "overworld");
-            String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
-            String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
+            String calcCoords = coordDisplay.replace("<x>", String.valueOf(x))
+                    .replace("<y>", String.valueOf(y))
+                    .replace("<z>", String.valueOf(z));
+            String resultCoords = coordDisplay.replace("<x>", String.valueOf(portalx))
+                    .replace("<y>", String.valueOf(y))
+                    .replace("<z>", String.valueOf(portalz));
 
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherCalcMessage));
-            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherResultMessage));
-            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
+            sender.spigot().sendMessage(new MineDown(netherCalcMessage).toComponent());
+            sender.spigot().sendMessage(new MineDown(calcCoords).toComponent());
+            sender.spigot().sendMessage(new MineDown(netherResultMessage).toComponent());
+            sender.spigot().sendMessage(new MineDown(resultCoords).toComponent());
 
             return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
@@ -122,7 +136,7 @@ public class PortalCalcCommand implements CommandExecutor {
             final Double inputZ = Doubles.tryParse(args[3]);
 
             if (inputX == null || inputY == null || inputZ == null) {
-                sender.sendMessage(ChatColor.RED + wrongArgError);
+                sender.sendMessage(wrongArgError);
                 return true;
             }
 
@@ -131,37 +145,34 @@ public class PortalCalcCommand implements CommandExecutor {
             final int z = (int) Math.floor(inputZ);
             final int portalx = x * calcBy;
             final int portalz = z * calcBy;
-            String netherCalcMessage = calcMessage.replace("<dimension>", "overworld");
-            String netherResultMessage = resultMessage.replace("<dimension>", "overworld");
-            String calcCoords = "X: " + x + " Y: " + y + " Z: " + z;
-            String resultCoords = "X: " + portalx + " Y: " + y + " Z: " + portalz;
+            String overworldCalcMessage = calcMessage.replace("<dimension>", "overworld");
+            String overworldResultMessage = resultMessage.replace("<dimension>", "overworld");
+            String calcCoords = coordDisplay.replace("<x>", String.valueOf(x))
+                    .replace("<y>", String.valueOf(y))
+                    .replace("<z>", String.valueOf(z));
+            String resultCoords = coordDisplay.replace("<x>", String.valueOf(portalx))
+                    .replace("<y>", String.valueOf(y))
+                    .replace("<z>", String.valueOf(portalz));
 
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherCalcMessage));
-            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + calcCoords);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', netherResultMessage));
-            sender.sendMessage(ColorUtil.getColor(config.getString("coord-color")) + resultCoords);
+            sender.spigot().sendMessage(new MineDown(overworldCalcMessage).toComponent());
+            sender.spigot().sendMessage(new MineDown(calcCoords).toComponent());
+            sender.spigot().sendMessage(new MineDown(overworldResultMessage).toComponent());
+            sender.spigot().sendMessage(new MineDown(resultCoords).toComponent());
 
             return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && args.length < 4
                 && sender.hasPermission("portalcalc.calc")) {
 
-            sender.sendMessage(ChatColor.RED + wrongArgError);
+            sender.sendMessage(wrongArgError);
             return true;
         } else if (cmd.getName().equalsIgnoreCase("portalcalc")
                 && !(sender.hasPermission("portalcalc.calc"))) {
 
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', noPermissionError));
-            return true;
-        } else if (cmd.getName().equalsIgnoreCase("portalcalc")
-                && args[0].equalsIgnoreCase("reload")
-                && sender.hasPermission("portalcalc.reload")) {
-
-            plugin.reloadConfig();
-            sender.sendMessage(ChatColor.GOLD + "Configuration and messages have been reloaded.");
+            sender.spigot().sendMessage(new MineDown(noPermissionError).toComponent());
             return true;
         }
-        sender.sendMessage(ChatColor.RED + wrongArgError);
+        sender.sendMessage(wrongArgError);
         return true;
     }
 }
